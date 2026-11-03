@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1d1c1a">
 <meta http-equiv="Cache-Control" content="no-cache">
-<meta name="bezerra-build" content="17efefb45ee6">
+<meta name="bezerra-build" content="9da7d481b3c7">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="HEROS.">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -13,9 +13,9 @@
 <link rel="icon" type="image/png" href="icons/favicon.png?v=7">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=7">
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script src="config.js?v=17efefb45ee6"></script>
+<script src="config.js?v=9da7d481b3c7"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="standalone.js?v=17efefb45ee6"></script>
+<script src="standalone.js?v=9da7d481b3c7"></script>
 </head>
 <body>
 <title>HEROS. — Controlo de horas</title>
@@ -1255,7 +1255,7 @@ td.num .desl { display: block; font-size: 11px; color: var(--muted); }
         <button type="button" class="btn ghost xbtn inv-x" id="inv-close" aria-label="Fechar" title="Fechar"><svg class="xi" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg><span class="xt">Fechar</span></button>
       <div class="inv-grid">
         <div class="inv-who">
-          <div><span class="k">De</span><b>Nicolas Natanael Melo Bezerra</b><small>NIF 310573475</small></div>
+          <div><span class="k">De</span><b id="me-name"></b><small id="me-nif"></small></div>
           <div><label class="k" for="inv-to">Para</label>
             <div class="ac inv-ac"><input type="text" id="inv-to" placeholder="Escreva ou escolha um cliente" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="inv-ac-list" spellcheck="false" autocorrect="off" autocapitalize="words"><ul class="ac-list" id="inv-ac-list" role="listbox" hidden></ul></div>
             <small id="inv-to-hint"></small></div>
@@ -2518,8 +2518,10 @@ td.num .desl { display: block; font-size: 11px; color: var(--muted); }
 
   // ---------- fatura (folha A4 no modelo da factura do exemplo) ----------
   const INV_FIELDS = ["doc", "ret", "mode", "single"];
-  // emitente fixo: os dados do Nicolas
-  const ME = { name: "Nicolas Natanael Melo Bezerra", addr: "Rua de Santo Eloy N 41 Dt.º\n1675-178 Pontinha\nPortugal", email: "nimelobezerra@gmail.com", nif: "310573475", iban: "" };
+  // emitente: preenchido depois de entrar
+  const ME = { name: "", addr: "", email: "", nif: "", iban: "" };
+  window.__setEmitente = (m) => { if (!m || typeof m !== "object") return; ["name", "addr", "email", "nif", "iban"].forEach((k) => { if (typeof m[k] === "string") ME[k] = m[k]; }); const n = document.getElementById("me-name"), f = document.getElementById("me-nif"); if (n) n.textContent = ME.name; if (f) f.textContent = ME.nif ? "NIF " + ME.nif : ""; };
+  if (window.__emitentePendente) window.__setEmitente(window.__emitentePendente);
   // cliente da fatura: a pessoa do filtro, ou a única pessoa dos registos filtrados
   function invClient(list) {
     const names = [...new Set(list.map((e) => e.client).filter(Boolean))];

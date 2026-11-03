@@ -77,7 +77,7 @@
       try { r = await fetch("/auth/token", { method: "POST", credentials: "same-origin" }); }
       catch (_) { return { ok: false, net: true }; }
       if (r.status === 200) {
-        const j = await r.json(); setToken(j); serverAuth = true;
+        const j = await r.json(); setToken(j); serverAuth = true; loadEmitente();
         keepServerSession(j.until); showMode();
         return { ok: true };
       }
@@ -91,6 +91,14 @@
     })().finally(() => { serverRefresh = null; });
     return serverRefresh;
   }
+  // dados do emitente da fatura: só o Worker os tem e só os entrega com sessão iniciada
+  function loadEmitente() {
+    fetch("/auth/me", { method: "POST", credentials: "same-origin" }).then((r) => r.ok ? r.json() : null).then((j) => {
+      if (!j || !j.me) return;
+      if (window.__setEmitente) window.__setEmitente(j.me); else window.__emitentePendente = j.me;
+    }).catch(() => {});
+  }
+  if (remember && remember.server) loadEmitente();
   // lembra no aparelho até quando vale a sessão (para abrir sem rede com os dados guardados)
   function keepServerSession(until) {
     remember = { until, hint: (remember && remember.hint) || "", server: true };
@@ -108,7 +116,7 @@
     return new Promise((resolve, reject) => { pendingCode = { resolve, reject }; codeClient.requestCode(); }).then(async (code) => {
       const r = await fetch("/auth/exchange", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code }) });
       const j = await r.json().catch(() => ({}));
-      if (r.ok && j.access_token) { setToken(j); keepServerSession(j.until); showMode(); return token; }
+      if (r.ok && j.access_token) { setToken(j); keepServerSession(j.until); showMode(); loadEmitente(); return token; }
       // o Google já tinha autorizado esta app sem sessão longa: retira essa autorização para o próximo toque pedir a completa
       if (r.status === 409) {
         if (j.access_token) try { google.accounts.oauth2.revoke(j.access_token, () => {}); } catch (_) {}

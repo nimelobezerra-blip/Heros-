@@ -26,6 +26,19 @@ PATCHES = [
 for old, new in PATCHES:
     src = src.replace(old, new)
 
+# dados do emitente (nome, NIF, morada) nunca ficam no código público: o Worker só os entrega
+# a quem tem sessão iniciada (segredo EMITENTE no Cloudflare)
+src = src.replace("// emitente fixo: os dados do Nicolas", "// emitente: preenchido depois de entrar")
+ME_RE = re.compile(r'const ME = \{[^\n]*\};')
+assert ME_RE.search(src), "emitente não encontrado em src/app.html"
+src = ME_RE.sub('const ME = { name: "", addr: "", email: "", nif: "", iban: "" };\n'
+  '  window.__setEmitente = (m) => { if (!m || typeof m !== "object") return; ["name", "addr", "email", "nif", "iban"].forEach((k) => { if (typeof m[k] === "string") ME[k] = m[k]; });'
+  ' const n = document.getElementById("me-name"), f = document.getElementById("me-nif"); if (n) n.textContent = ME.name; if (f) f.textContent = ME.nif ? "NIF " + ME.nif : ""; };'
+  '\n  if (window.__emitentePendente) window.__setEmitente(window.__emitentePendente);', src, count=1)
+FROM_RE = re.compile(r'<div><span class="k">De</span><b>[^<]*</b><small>[^<]*</small></div>')
+assert FROM_RE.search(src), "bloco De da fatura não encontrado"
+src = FROM_RE.sub('<div><span class="k">De</span><b id="me-name"></b><small id="me-nif"></small></div>', src, count=1)
+
 # versão desta compilação: o site compara-a com a do servidor e recarrega se houver nova
 BUILD = hashlib.sha1((src + (ROOT / "standalone.js").read_text(encoding="utf-8")).encode("utf-8")).hexdigest()[:12]
 
@@ -80,6 +93,8 @@ headers = """/*
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   Cross-Origin-Opener-Policy: same-origin-allow-popups
+  Cross-Origin-Resource-Policy: same-origin
+  X-Robots-Tag: noindex, nofollow, noarchive
 """ % csp
 (ROOT / "_headers").write_text(headers, encoding="utf-8")
 print("index.html gerado")

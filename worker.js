@@ -1,5 +1,5 @@
 /*
- * Bezerra — sessão Google guardada no Cloudflare.
+ * HEROS — sessão Google guardada no Cloudflare.
  *
  * O site continua a ser servido como ficheiros estáticos; este Worker só responde a /auth/*.
  * Com o "client secret" do Google guardado como segredo do Worker (GOOGLE_CLIENT_SECRET),
@@ -9,9 +9,10 @@
  *   POST /auth/exchange  { code }  → entra (guarda a sessão) e devolve um acesso
  *   POST /auth/token               → devolve um acesso novo a partir da sessão guardada
  *   POST /auth/logout              → revoga a sessão no Google e apaga o cookie
+ *   POST /auth/me                  → dados do emitente da fatura (segredo EMITENTE), só com sessão
  */
 const SESSION_DAYS = 7;
-const COOKIE = "bz_s";
+const COOKIE = "__Host-hs_s";
 const MAX_AGE = SESSION_DAYS * 86400;
 
 export default {
@@ -23,12 +24,15 @@ export default {
     if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405);
     // só aceita pedidos do próprio site (proteção contra pedidos forjados de outras páginas)
     if (req.headers.get("Origin") !== url.origin) return json({ error: "forbidden" }, 403);
+    const site = req.headers.get("Sec-Fetch-Site");
+    if (site && site !== "same-origin") return json({ error: "forbidden" }, 403);
 
     const key = await sessionKey(env.GOOGLE_CLIENT_SECRET);
     try {
       if (url.pathname === "/auth/exchange") return await exchange(req, env, key);
       if (url.pathname === "/auth/token") return await refresh(req, env, key);
       if (url.pathname === "/auth/logout") return await logout(req, key);
+      if (url.pathname === "/auth/me") return await me(req, env, key);
     } catch (e) {
       return json({ error: "server_error" }, 500);
     }
@@ -37,9 +41,10 @@ export default {
 };
 
 async function exchange(req, env, key) {
+  if (!(req.headers.get("Content-Type") || "").startsWith("application/json")) return json({ error: "bad_request" }, 400);
   let body = {};
   try { body = await req.json(); } catch (_) {}
-  if (!body.code || typeof body.code !== "string") return json({ error: "bad_request" }, 400);
+  if (!body.code || typeof body.code !== "string" || body.code.length > 512) return json({ error: "bad_request" }, 400);
   const g = await google({
     code: body.code, client_id: env.GOOGLE_CLIENT_ID, client_secret: env.GOOGLE_CLIENT_SECRET,
     redirect_uri: "postmessage", grant_type: "authorization_code",
@@ -65,6 +70,14 @@ async function refresh(req, env, key) {
   return json({ access_token: g.access_token, expires_in: g.expires_in, until: s.iat + MAX_AGE * 1000 });
 }
 
+async function me(req, env, key) {
+  const s = await open(readCookie(req), key);
+  if (!s || !s.rt || Date.now() - s.iat > MAX_AGE * 1000) return json({ error: "no_session" }, 401);
+  let data = null;
+  try { data = env.EMITENTE ? JSON.parse(env.EMITENTE) : null; } catch (_) {}
+  return json({ me: data });
+}
+
 async function logout(req, key) {
   const s = await open(readCookie(req), key);
   if (s && s.rt) {
@@ -84,7 +97,7 @@ async function google(params) {
 async function sessionKey(secret) {
   const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), "HKDF", false, ["deriveKey"]);
   return crypto.subtle.deriveKey(
-    { name: "HKDF", hash: "SHA-256", salt: new TextEncoder().encode("bezerra"), info: new TextEncoder().encode("session-cookie-v1") },
+    { name: "HKDF", hash: "SHA-256", salt: new TextEncoder().encode("heros"), info: new TextEncoder().encode("session-cookie-v1") },
     base, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"],
   );
 }
@@ -111,14 +124,14 @@ function unb64url(s) {
   return Uint8Array.from(bin, (c) => c.charCodeAt(0));
 }
 function readCookie(req) {
-  const m = /(?:^|;\s*)bz_s=([^;]+)/.exec(req.headers.get("Cookie") || "");
+  const m = /(?:^|;\s*)__Host-hs_s=([^;]+)/.exec(req.headers.get("Cookie") || "");
   return m ? m[1] : "";
 }
 function setCookie(value, maxAge) {
-  return { "Set-Cookie": COOKIE + "=" + value + "; Path=/auth; HttpOnly; Secure; SameSite=Strict; Max-Age=" + maxAge };
+  return { "Set-Cookie": COOKIE + "=" + value + "; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=" + maxAge };
 }
 function json(obj, status = 200, headers = {}) {
   return new Response(JSON.stringify(obj), {
-    status, headers: Object.assign({ "Content-Type": "application/json", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" }, headers),
+    status, headers: Object.assign({ "Content-Type": "application/json", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff", "X-Robots-Tag": "noindex", "Cross-Origin-Resource-Policy": "same-origin" }, headers),
   });
 }
