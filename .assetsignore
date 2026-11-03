@@ -1,0 +1,11 @@
+# ficheiros do repositório que não fazem parte do site
+.git
+.github
+src
+build.py
+wrangler.jsonc
+.assetsignore
+LEIA-ME.md
+*.zip
+node_modules
+worker.js

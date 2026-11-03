@@ -1,0 +1,15 @@
+{
+  // Site HEROS no Cloudflare: ficheiros estáticos + worker.js, que só responde a /auth/*
+  // (sessão Google lembrada durante 7 dias). O segredo GOOGLE_CLIENT_SECRET é definido
+  // no painel do Cloudflare (Worker → Definições → Variáveis e segredos), nunca aqui.
+  "name": "heros",
+  "main": "worker.js",
+  "compatibility_date": "2025-09-01",
+  "assets": {
+    "directory": "./",
+    "binding": "ASSETS"
+  },
+  "vars": {
+    "GOOGLE_CLIENT_ID": "369981917985-4nius10v6i3588bi862b1gauuqe83dud.apps.googleusercontent.com"
+  }
+}
