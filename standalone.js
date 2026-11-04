@@ -434,7 +434,14 @@
     if (hasToken()) enter();
     else { const w = setInterval(() => { if (gisLoaded()) { clearInterval(w); initClient(); } }, 200); }
   }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", build); else build();
+  // versão no fundo da página (para confirmar que o aparelho tem a mais recente)
+  function showVersion() {
+    const meta = document.querySelector('meta[name="bezerra-build"]'); if (!meta) return;
+    const v = document.createElement("p"); v.className = "bz-ver"; v.textContent = "Versão " + meta.content.slice(0, 7);
+    v.style.cssText = "text-align:center;font-size:11px;color:var(--muted,#888);margin:28px 0 8px;opacity:.7";
+    (document.getElementById("app") || document.body).appendChild(v);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => { build(); showVersion(); }); else { build(); showVersion(); }
   // versão nova no servidor? recarrega (o iPhone guarda páginas antigas na app do ecrã principal)
   function checkUpdate() {
     const meta = document.querySelector('meta[name="bezerra-build"]'), mine = meta && meta.content;
