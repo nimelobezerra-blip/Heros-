@@ -2,10 +2,10 @@
 <html lang="pt-PT">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#1d1c1a">
 <meta http-equiv="Cache-Control" content="no-cache">
-<meta name="bezerra-build" content="8972693f72aa">
+<meta name="bezerra-build" content="da449c0b0b18">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="HEROS.">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -13,9 +13,9 @@
 <link rel="icon" type="image/png" href="icons/favicon.png?v=7">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=7">
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script src="config.js?v=8972693f72aa"></script>
+<script src="config.js?v=da449c0b0b18"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="standalone.js?v=8972693f72aa"></script>
+<script src="standalone.js?v=da449c0b0b18"></script>
 </head>
 <body>
 <title>HEROS. — Controlo de horas</title>
@@ -426,7 +426,7 @@ html.noscroll, html.noscroll body { overflow: hidden; }
 .formbox #formcard, .agendabox #agendacard { max-width: 780px; margin: 0 auto; animation: boxin .22s cubic-bezier(.3, 1.4, .5, 1); }
 /* novo registo: janela flutuante ao centro, com o título e o botão de guardar sempre visíveis */
 #formbox { display: grid; place-items: center; overflow: hidden; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
-#formbox #formcard { width: min(780px, 100%); max-height: calc(100dvh - 48px); overflow-y: auto; overscroll-behavior: contain; padding-top: 0; padding-bottom: 0; border-radius: 22px; box-shadow: 10px 10px 0 var(--stamp), 0 30px 60px -20px rgba(15, 12, 35, .55); animation: floatin .28s cubic-bezier(.3, 1.4, .5, 1); }
+#formbox #formcard { width: min(780px, 100%); max-height: calc(var(--vvh, 100dvh) - 48px); overflow-y: auto; overscroll-behavior: contain; padding-top: 0; padding-bottom: 0; border-radius: 22px; box-shadow: 10px 10px 0 var(--stamp), 0 30px 60px -20px rgba(15, 12, 35, .55); animation: floatin .28s cubic-bezier(.3, 1.4, .5, 1); }
 #formbox #formcard > h2 { position: sticky; top: 0; z-index: 3; background: var(--paper); margin: 0 -20px 6px; padding: 18px 20px 12px; border-bottom: 2px dashed var(--line); }
 #formbox form.entry > .actions { position: sticky; bottom: 0; z-index: 3; background: var(--paper); margin: 4px -20px 0; padding: 12px 20px 16px; border-top: 2px dashed var(--line); }
 @keyframes floatin { from { transform: translateY(24px) scale(.96); opacity: 0; } }
@@ -438,10 +438,10 @@ html.noscroll, html.noscroll body { overflow: hidden; }
 @media (max-width: 640px) {
   .formbox { padding: max(12px, env(safe-area-inset-top, 0px)) 8px max(12px, env(safe-area-inset-bottom, 0px)); }
   #formbox { padding: max(14px, env(safe-area-inset-top, 0px)) 12px max(14px, env(safe-area-inset-bottom, 0px)); }
-  #formbox #formcard { max-height: calc(100dvh - 28px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); border-radius: 20px; box-shadow: 6px 6px 0 var(--stamp), 0 24px 50px -20px rgba(15, 12, 35, .55); }
+  #formbox #formcard { max-height: calc(var(--vvh, 100dvh) - 28px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); border-radius: 20px; box-shadow: 6px 6px 0 var(--stamp), 0 24px 50px -20px rgba(15, 12, 35, .55); }
   #formbox #formcard > h2 { margin: 0 -16px 6px; padding: 14px 16px 10px; }
   #sheetbox { padding: max(14px, env(safe-area-inset-top, 0px)) 10px max(14px, env(safe-area-inset-bottom, 0px)); }
-  .sheetbox #sheetcard { max-height: calc(100dvh - 28px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); border-radius: 20px; box-shadow: 6px 6px 0 var(--accent), 0 24px 50px -20px rgba(15, 12, 35, .55); }
+  .sheetbox #sheetcard { max-height: calc(var(--vvh, 100dvh) - 28px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); border-radius: 20px; box-shadow: 6px 6px 0 var(--accent), 0 24px 50px -20px rgba(15, 12, 35, .55); }
   .sheetbox #sheetcard > .sheet-head { position: static; margin: 0 -16px 10px; padding: 14px 16px 10px; display: flex !important; flex-wrap: wrap; align-items: center; gap: 10px; }
   .sheetbox .sheet-head h2 { order: 1; flex: 1 1 auto; }
   .sheetbox .sheetclose { order: 2; }
@@ -450,7 +450,7 @@ html.noscroll, html.noscroll body { overflow: hidden; }
   .fab-sheet { bottom: calc(86px + env(safe-area-inset-bottom, 0px)); width: 52px; height: 52px; right: calc(21px + env(safe-area-inset-right, 0px)); }
   .fab-clients { bottom: calc(148px + env(safe-area-inset-bottom, 0px)); width: 52px; height: 52px; right: calc(21px + env(safe-area-inset-right, 0px)); }
   #clientbox { padding: max(14px, env(safe-area-inset-top, 0px)) 10px max(14px, env(safe-area-inset-bottom, 0px)); }
-  .clientbox #clientcard { max-height: calc(100dvh - 28px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); border-radius: 20px; box-shadow: 6px 6px 0 var(--violet), 0 24px 50px -20px rgba(15, 12, 35, .55); }
+  .clientbox #clientcard { max-height: calc(var(--vvh, 100dvh) - 28px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); border-radius: 20px; box-shadow: 6px 6px 0 var(--violet), 0 24px 50px -20px rgba(15, 12, 35, .55); }
   .cl-head { margin: 0 -16px 12px; padding: 14px 16px 10px; }
   .cl-form { grid-template-columns: minmax(0, 1fr); }
   .cl-list { grid-template-columns: minmax(0, 1fr); }
@@ -532,7 +532,7 @@ html.noscroll, html.noscroll body { overflow: hidden; }
 .fab b { display: none; }
 .fab-sheet { bottom: calc(88px + env(safe-area-inset-bottom, 0px)); background: var(--accent); color: #fff; font-size: 26px; }
 .sheetbox { z-index: 62; display: grid; place-items: center; overflow: hidden; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
-.sheetbox #sheetcard { width: min(1080px, 100%); max-height: calc(100dvh - 48px); overflow-y: auto; overscroll-behavior: contain; padding-top: 0; border-radius: 22px; box-shadow: 10px 10px 0 var(--accent), 0 30px 60px -20px rgba(15, 12, 35, .55); animation: floatin .28s cubic-bezier(.3, 1.4, .5, 1); }
+.sheetbox #sheetcard { width: min(1080px, 100%); max-height: calc(var(--vvh, 100dvh) - 48px); overflow-y: auto; overscroll-behavior: contain; padding-top: 0; border-radius: 22px; box-shadow: 10px 10px 0 var(--accent), 0 30px 60px -20px rgba(15, 12, 35, .55); animation: floatin .28s cubic-bezier(.3, 1.4, .5, 1); }
 .sheetbox #sheetcard > .sheet-head { position: sticky; top: 0; z-index: 4; background: var(--paper); margin: 0 -20px 14px; padding: 18px 20px 12px; border-bottom: 2px dashed var(--line); }
 .sheetbox .sheet-head h2 { margin-right: auto !important; }
 .sheetbox .sheetclose { order: 3; }
@@ -560,7 +560,7 @@ html.noscroll, html.noscroll body { overflow: hidden; }
 @media (min-width: 641px) { .fab.fab-sheet { bottom: calc(94px + env(safe-area-inset-bottom, 0px)); font-size: 22px; } }
 .fab-clients { bottom: calc(154px + env(safe-area-inset-bottom, 0px)); background: var(--violet); color: #fff; font-size: 26px; }
 @media (min-width: 641px) { .fab.fab-clients { bottom: calc(160px + env(safe-area-inset-bottom, 0px)); font-size: 22px; } }
-.clientbox #clientcard { width: min(860px, 100%); max-height: calc(100dvh - 48px); overflow-y: auto; overscroll-behavior: contain; padding-top: 0; border-radius: 22px; box-shadow: 10px 10px 0 var(--violet), 0 30px 60px -20px rgba(15, 12, 35, .55); animation: floatin .28s cubic-bezier(.3, 1.4, .5, 1); }
+.clientbox #clientcard { width: min(860px, 100%); max-height: calc(var(--vvh, 100dvh) - 48px); overflow-y: auto; overscroll-behavior: contain; padding-top: 0; border-radius: 22px; box-shadow: 10px 10px 0 var(--violet), 0 30px 60px -20px rgba(15, 12, 35, .55); animation: floatin .28s cubic-bezier(.3, 1.4, .5, 1); }
 .cl-head { position: sticky; top: 0; z-index: 4; background: var(--paper); margin: 0 -20px 14px; padding: 18px 20px 12px; border-bottom: 2px dashed var(--line); display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .cl-head h2 { margin: 0 auto 0 0 !important; --hl: color-mix(in srgb, var(--violet) 35%, transparent); }
 .cl-search { flex: 1 1 100%; }
@@ -1214,13 +1214,13 @@ td.num .desl { display: block; font-size: 11px; color: var(--muted); }
 @media (max-width: 640px) { .sh-list { grid-template-columns: 1fr; } #sheetscard .sh-seg { margin: 0; padding: 0; -webkit-mask-image: none; mask-image: none; flex-basis: 100%; } #sheetscard h2 { flex-wrap: wrap; } }
 
 /* caixa das folhas emitidas e botão na barra */
-.clientbox #sheetscard { width: min(860px, 100%); max-height: calc(100dvh - 48px); overflow-y: auto; overscroll-behavior: contain; padding-top: 0; border-radius: 12px; border: 1px solid var(--line); box-shadow: var(--shadow-pop); }
+.clientbox #sheetscard { width: min(860px, 100%); max-height: calc(var(--vvh, 100dvh) - 48px); overflow-y: auto; overscroll-behavior: contain; padding-top: 0; border-radius: 12px; border: 1px solid var(--line); box-shadow: var(--shadow-pop); }
 #sheetscard .cl-head h2 { margin: 0 auto 0 0; }
 #sheetscard .sh-seg { flex-basis: 100%; margin: 0; }
 #fabsh { background: var(--paper); color: var(--ink) !important; border: 1px solid var(--edge); box-shadow: 0 6px 16px -10px rgba(0, 0, 0, .45); }
 .dock .fab[hidden] { display: none !important; }
 @media (max-width: 640px) {
-  .clientbox #sheetscard { max-height: calc(100dvh - 28px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); }
+  .clientbox #sheetscard { max-height: calc(var(--vvh, 100dvh) - 28px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); }
   .dock { grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.3fr); gap: 6px; }
   .dock #fabclients { order: 1; } .dock #fabsheet { order: 2; } .dock #fabsh { order: 3; } .dock #fab { order: 4; }
   .dock .fab b { font-size: 11px; }
@@ -1237,6 +1237,117 @@ td.num .desl { display: block; font-size: 11px; color: var(--muted); }
 .sheet-strip .strip-head { justify-content: center; gap: 14px; }
 .sheet-strip .strip-head .mono { font-family: var(--serif); font-size: 17px; font-weight: 600; min-width: 3em; }
 @media (max-width: 640px) { .sheet-filter .sheet-strip { grid-column: 1 / -1; } }
+
+#mail-btn, #wa-btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; }
+#mail-btn .mi, #wa-btn .mi { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; stroke-linecap: round; flex: none; }
+/* folha de horas: botões no rodapé, sempre à vista */
+.sheet-foot .fm { display: none; }
+.sheetbox #sheetcard > .sheet-foot { position: sticky; bottom: -20px; z-index: 4; background: var(--paper); margin: 14px -20px -20px; padding: 12px 20px 16px; border-top: 2px dashed var(--line); display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
+@media (max-width: 640px) {
+  .sheetbox #sheetcard > .sheet-foot { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; margin: 12px -16px -16px; padding: 10px 16px max(12px, env(safe-area-inset-bottom, 0px)); }
+  .sheetbox #sheetcard > .sheet-foot { bottom: -16px; }
+  .sheetbox .sheet-foot .btn { padding: 9px 8px; min-height: 0; white-space: nowrap; }
+  .sheetbox .sheet-foot .fw { display: none; }
+  .sheetbox .sheet-foot .fm { display: inline; }
+  .sheetbox .sheet-foot #export { grid-column: 1 / -1; }
+}
+/* logótipo: no HEROS o nome fica fixo */
+.wordmark .name { white-space: nowrap; }
+.wordmark .name .las i { display: inline-block; font-style: normal; overflow: hidden; vertical-align: top; max-width: 1.8em; }
+.wordmark .name.play .las i { animation: nm-close .5s cubic-bezier(.65, 0, .35, 1) forwards; }
+.wordmark .name.play .las i:nth-child(3) { animation-delay: .9s; }
+.wordmark .name.play .las i:nth-child(2) { animation-delay: 1.02s; }
+.wordmark .name.play .las i:nth-child(1) { animation-delay: 1.14s; }
+.wordmark .name b { display: inline-block; transform-origin: 50% 85%; }
+.wordmark .name.play b { animation: nm-dot .45s cubic-bezier(.3, 1.7, .5, 1) 1.55s both; }
+@keyframes nm-close { 0% { max-width: 1.8em; opacity: 1; } 55% { opacity: 0; } 100% { max-width: 0; opacity: 0; } }
+@keyframes nm-dot { 0% { transform: scale(0); opacity: 0; } 100% { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .wordmark .name .las { display: none; } .wordmark .name.play b { animation: none; } }
+/* clientes: informações fechadas, abrem com "Ver mais" */
+.cl-card .nm .nt { flex: 1 1 auto; min-width: 0; }
+.cl-card .nm .vm { flex: none; border: 2px solid var(--line); background: transparent; border-radius: 999px; padding: 4px 11px; font: inherit; font-size: 12.5px; font-weight: 700; color: var(--muted); cursor: pointer; }
+.cl-card .nm .vm:hover, .cl-card.open .nm .vm { border-color: var(--edge); color: var(--ink); }
+.cl-card .more { display: grid; gap: 6px; }
+.cl-card .more[hidden] { display: none; }
+/* pré-visualização da fatura em ecrã inteiro, centrada */
+.a4 { cursor: zoom-in; }
+.a4view { position: fixed; inset: 0; z-index: 95; display: flex; flex-direction: column; background: rgba(14, 13, 12, .88); padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px); }
+.a4view[hidden] { display: none !important; }
+.a4v-bar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; flex: none; }
+.a4v-title { margin-right: auto; color: #f3f0e8; font-family: var(--serif); font-size: 17px; font-weight: 600; }
+.a4v-btn { border: 2px solid rgba(243, 240, 232, .35); background: transparent; color: #f3f0e8; border-radius: 999px; padding: 7px 14px; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
+.a4v-btn[aria-pressed="true"] { background: #f3f0e8; color: #1d1c1a; border-color: #f3f0e8; }
+.a4v-x { width: 40px; height: 40px; padding: 0; display: grid; place-items: center; }
+.a4v-x .xi { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; fill: none; }
+.a4v-scroll { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; display: flex; padding: 6px 12px 24px; -webkit-overflow-scrolling: touch; }
+.a4v-page { width: min(794px, 100%); max-width: none; margin: auto; flex: none; }
+.a4v-page .a4 { cursor: default; box-shadow: 0 20px 50px -20px rgba(0, 0, 0, .7); }
+.a4view.zoom .a4v-page { width: max(794px, 100%); }
+@media (min-height: 700px) and (min-width: 700px) { .a4view:not(.zoom) .a4v-page { width: min(794px, 100%, calc((100dvh - 110px) * 210 / 297)); } }
+/* caixas: com o teclado aberto ocupam só a parte visível, e a base fica acima do teclado */
+.formbox { top: var(--vvt, 0px); bottom: auto; height: var(--vvh, 100%); }
+/* zoom bloqueado: sem duplo toque para ampliar */
+html, body { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+/* cabeçalho arrumado: logótipo e "Sair" na mesma linha; estado e sessão por baixo, alinhados */
+header.top { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px 14px; padding-bottom: 14px; border-bottom: 2px dashed var(--line); }
+header.top .brand { grid-column: 1; grid-row: 1; min-width: 0; }
+header.top .bz-out { grid-column: 2; grid-row: 1; align-self: center; padding: 7px 14px; font-size: 13px; }
+header.top .status { grid-column: 1 / -1; grid-row: 2; justify-self: start; margin: 0; }
+header.top .bz-mode { grid-column: 1 / -1; grid-row: 3; margin: -6px 0 0 4px; font-size: 11.5px; color: var(--muted); }
+header.top .bz-mode::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--ok, #3f8f5a); margin-right: 7px; vertical-align: 1px; }
+@media (min-width: 720px) {
+  header.top { grid-template-columns: auto minmax(0, 1fr) auto; }
+  header.top .status { grid-column: 2; grid-row: 1; justify-self: end; }
+  header.top .bz-out { grid-column: 3; }
+  header.top .bz-mode { grid-column: 2 / -1; grid-row: 2; justify-self: end; margin: -6px 2px 0 0; }
+}
+/* cabeçalho da folha de horas: título e fechar; pessoa e ano lado a lado; meses compactos */
+.sheetbox .sheet-head .sheet-filter { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 10px 12px; padding-top: 2px; }
+.sheetbox .sheet-head .sheet-filter label.f:first-of-type { grid-column: 1; grid-row: 1; display: grid; gap: 4px; margin: 0; }
+.sheetbox .sheet-head .sheet-filter label.f:first-of-type select { width: 100%; min-width: 0; height: 40px; padding: 0 34px 0 12px; }
+.sheetbox .sheet-head .sheet-strip { display: contents; }
+.sheetbox .sheet-head .sheet-strip .strip-head { grid-column: 2; grid-row: 1; gap: 4px; height: 40px; border: 2px solid var(--line); border-radius: 10px; padding: 0 3px; background: var(--bg); }
+.sheetbox .sheet-head .sheet-strip .strip-head .iconbtn { width: 32px; height: 32px; min-width: 0; border: 0; background: transparent; box-shadow: none; font-size: 18px; }
+.sheetbox .sheet-head .sheet-strip .strip-head .mono { font-size: 16px; min-width: 2.8em; }
+.sheetbox .sheet-head .months { grid-column: 1 / -1; grid-row: 2; }
+.sheetbox .sheet-head .mbtn { padding: 3px 2px 5px; gap: 2px; }
+.sheetbox .sheet-head .mbtn .bar { height: 24px; }
+.sheetbox .sheet-head .mbtn .bar i { width: 54%; border-radius: 4px 4px 1px 1px; }
+.sheetbox .sheet-head h2 { line-height: 1.1; }
+.sheetbox .sheet-head .sheet-filter label.f:first-of-type > span { margin: 0; }
+@media (max-width: 640px) {
+  .sheetbox #sheetcard > .sheet-head { gap: 8px 10px; padding-bottom: 8px; }
+  .sheetbox .sheet-head .mbtn { flex: 0 0 46px; }
+  .sheetbox .sheet-head .sheet-filter label.f:first-of-type > span { font-size: 10.5px; }
+}
+/* ===== interação: respostas ao toque, entradas suaves e destaque ao passar ===== */
+.db-actions > .btn { flex: 1 1 100%; justify-content: center; text-align: center; }
+.btn, .fab, .cl-card .vm { position: relative; overflow: hidden; -webkit-tap-highlight-color: transparent; }
+.rip { position: absolute; border-radius: 50%; pointer-events: none; background: currentColor; opacity: .18; transform: scale(0); animation: rip .55s ease-out forwards; }
+@keyframes rip { to { transform: scale(1); opacity: 0; } }
+@keyframes reveal { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+@keyframes riseIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  .btn, .iconbtn, .fab, .mbtn, .cl-card .vm, .cl-card .acts button, .seg button, .sh-seg button, .a4v-btn, .bz-out, .tagchip, .cal .day { transition: transform .15s ease, box-shadow .15s ease, background-color .2s ease, border-color .2s ease, color .2s ease, opacity .2s ease; }
+  .btn:active, .iconbtn:active, .mbtn:active, .cl-card .vm:active, .cl-card .acts button:active, .seg button:active, .sh-seg button:active, .a4v-btn:active, .bz-out:active, .cal .day:active { transform: scale(.95); box-shadow: none; }
+  .fab:active, .dock .fab:active { transform: scale(.94); }
+  .cl-card, .sh-item { transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+  .cl-card .more:not([hidden]) { animation: reveal .24s ease both; }
+  .cl-list > .cl-card, .sh-list > .sh-item { animation: riseIn .28s ease both; }
+  .cl-list > .cl-card:nth-child(2), .sh-list > .sh-item:nth-child(2) { animation-delay: .03s; }
+  .cl-list > .cl-card:nth-child(3), .sh-list > .sh-item:nth-child(3) { animation-delay: .06s; }
+  .cl-list > .cl-card:nth-child(n+4), .sh-list > .sh-item:nth-child(n+4) { animation-delay: .09s; }
+  .invoice:not([hidden]) { animation: reveal .26s ease both; }
+  .a4view:not([hidden]) .a4v-page { animation: riseIn .26s ease both; }
+  .mbtn[aria-pressed="true"] .bar i { animation: grow .4s cubic-bezier(.3, 1.5, .5, 1) both; transform-origin: bottom; }
+  @keyframes grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+  .toast { transition: transform .25s cubic-bezier(.3, 1.4, .5, 1), opacity .2s ease; }
+  @media (hover: hover) {
+    .cl-card:hover, .sh-item:hover { transform: translateY(-2px); box-shadow: 0 12px 24px -18px rgba(0, 0, 0, .55); border-color: var(--edge); }
+    .btn:hover { transform: translateY(-1px); }
+    .mbtn:hover { background: var(--soft, rgba(0, 0, 0, .04)); }
+  }
+}
 </style>
 
 <div class="wrap" id="app">
@@ -1255,7 +1366,7 @@ td.num .desl { display: block; font-size: 11px; color: var(--muted); }
         </g>
       </svg>
       <div class="wordmark" aria-hidden="true">
-        <span class="name">HEROS<b>.</b></span>
+        <span class="name play" id="brand-name">HEROS<b>.</b></span>
         <svg class="squiggle" viewBox="0 0 132 12" aria-hidden="true"><path d="M2 7 C 14 1, 22 11, 34 6 S 54 1, 66 6 S 86 11, 98 6 S 118 1, 130 6"/></svg>
       </div>
     </div>
@@ -1359,9 +1470,6 @@ td.num .desl { display: block; font-size: 11px; color: var(--muted); }
     <div class="sheet-head">
       <h2><span class="hl">Folha de horas</span></h2>
       <button type="button" class="btn ghost xbtn sheetclose" id="sheetclose" aria-label="Fechar" title="Fechar"><svg class="xi" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg><span class="xt">Fechar</span></button>
-      <div class="headbtns">
-        <button type="button" class="btn" id="export" aria-expanded="false" aria-controls="invoice">Exportar fatura</button>
-      </div>
       <div class="sheet-filter">
         <label class="f"><span>Pessoa</span><select id="sf-client"></select></label>
         <label class="f" hidden><span>De</span><input type="date" id="sf-from"></label>
@@ -1390,8 +1498,9 @@ td.num .desl { display: block; font-size: 11px; color: var(--muted); }
         <input type="hidden" id="i-doc" value="Fatura"><input type="hidden" id="i-num"><input type="hidden" id="i-ret" value="0">
         <div class="inv-total"><span class="k">Total da fatura</span><span class="mono" id="i-total">€0,00</span></div>
       </div>
-      <div class="a4wrap"><div class="a4" id="a4"></div></div>
+      <div class="a4wrap"><div class="a4" id="a4" role="button" tabindex="0" aria-label="Abrir a pré-visualização da fatura" title="Toque para ver em grande"></div></div>
       <div class="actions">
+        <button type="button" class="btn" id="a4-open">Pré-visualizar</button>
         <button type="button" class="btn primary" id="inv-pdf">Descarregar PDF (A4)</button>
         <span class="msg" id="inv-msg"></span>
       </div>
@@ -1406,7 +1515,20 @@ td.num .desl { display: block; font-size: 11px; color: var(--muted); }
         <tfoot id="foot"></tfoot>
       </table>
     </div>
+    <div class="headbtns sheet-foot">
+      <button type="button" class="btn" id="mail-btn"><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/></svg><span class="fw">Enviar e-mail</span><span class="fm">E-mail</span></button>
+      <button type="button" class="btn" id="wa-btn"><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 19.5l1.2-3.6A8 8 0 1 1 8.4 18.6z"/><path d="M9.2 8.6c.2-.4.5-.5.8-.5h.4l.9 2-.6.8c.5 1 1.3 1.8 2.3 2.3l.8-.6 2 .9v.4c0 .4-.2.7-.6.9-.9.4-2.4.1-3.9-1.1s-2.5-2.8-2.4-3.9c0-.5.1-.9.3-1.2z"/></svg><span class="fw">Enviar WhatsApp</span><span class="fm">WhatsApp</span></button>
+      <button type="button" class="btn" id="export" aria-expanded="false" aria-controls="invoice">Exportar fatura</button>
+    </div>
   </section>
+</div>
+<div class="a4view" id="a4view" role="dialog" aria-modal="true" aria-label="Pré-visualização da fatura" hidden>
+  <div class="a4v-bar">
+    <span class="a4v-title">Pré-visualização</span>
+    <button type="button" class="a4v-btn" id="a4v-zoom" aria-pressed="false">Ampliar</button>
+    <button type="button" class="a4v-btn a4v-x" id="a4v-close" aria-label="Fechar" title="Fechar"><svg class="xi" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="a4v-scroll" id="a4v-scroll"><div class="a4wrap a4v-page" id="a4v-page"></div></div>
 </div>
 <div class="formbox" id="formbox" hidden>
   <section class="card" id="formcard" role="dialog" aria-modal="true" aria-labelledby="formtitle" hidden>
@@ -1640,8 +1762,14 @@ td.num .desl { display: block; font-size: 11px; color: var(--muted); }
       b.addEventListener("click", () => setPreset("mes", ms));
       box.appendChild(b);
     });
-    const sel = box.querySelector('[aria-pressed="true"]') || box.querySelector(".inrange");
-    if (sel && box.scrollWidth > box.clientWidth) box.scrollLeft = sel.offsetLeft - box.offsetLeft - box.clientWidth / 2 + sel.offsetWidth / 2;
+    centerMonth();
+  }
+  // centra o mês escolhido na barra dos meses (no telemóvel a barra desliza)
+  function centerMonth() {
+    const box = $("months"), sel = box.querySelector('[aria-pressed="true"]') || box.querySelector(".inrange");
+    if (!sel || box.scrollWidth <= box.clientWidth) return;
+    const b = box.getBoundingClientRect(), r = sel.getBoundingClientRect();
+    box.scrollLeft += (r.left + r.width / 2) - (b.left + b.width / 2);
   }
 
   // ---------- render ----------
@@ -1943,7 +2071,6 @@ td.num .desl { display: block; font-size: 11px; color: var(--muted); }
       const chip = document.createElement("span"); chip.className = "tagchip"; chip.style.setProperty("--c", tag.color); chip.innerHTML = "<i></i><span></span>"; chip.lastChild.textContent = tag.name;
       row.appendChild(chip);
       if (entries.some((x) => x.date === d && norm(x.job) === norm(job))) { const s = document.createElement("span"); s.className = "db-done"; s.textContent = "✓ registado"; row.appendChild(s); }
-      else if (canWrite) { const cb = btn("Criar registo", () => { closeDay(); fromEvent(e, t, job, d); }); cb.className = "btn"; row.appendChild(cb); }
       box.appendChild(row);
       // editar / apagar o evento no Google Calendar (só eventos criados por si)
       const mine = !e.organizer || e.organizer.self;
@@ -1974,12 +2101,6 @@ td.num .desl { display: block; font-size: 11px; color: var(--muted); }
       const v = document.createElement("span"); v.className = "mono"; v.textContent = fmtH(workedMin(x)) + " h · " + money(totalOf(x));
       r.append(l, v); body.appendChild(r);
     });
-    if (canWrite) {
-      const nb = btn("+ Novo registo neste dia", () => { closeDay(); resetForm(); $("f-date").value = d; updatePreview(); openForm(); });
-      nb.className = "btn primary";
-      const ab = btn("+ Atividade na agenda", () => { closeDay(); openAdd(d, null, d); }); ab.className = "btn";
-      const wrapb = document.createElement("div"); wrapb.className = "db-actions"; wrapb.append(nb, ab); body.appendChild(wrapb);
-    }
     dbReturn = document.activeElement;
     $("daybox").hidden = false; $("db-close").focus();
   }
@@ -2483,7 +2604,7 @@ td.num .desl { display: block; font-size: 11px; color: var(--muted); }
     $("inv-to").dataset.last = filter.client;
     commit(true);
   }
-  clientAc($("inv-to"), $("inv-ac-list"), setInvTo);
+  clientAc($("inv-to"), $("inv-ac-list"), (name) => { setInvTo(name); $("inv-to").blur(); setTimeout(centerA4, 60); setTimeout(centerA4, 450); });
   // pesquisa da primeira caixa: escolher um cliente filtra por ele
   clientAc($("d-q"), $("q-ac-list"), (name) => { clearTimeout(qT); filter.q = name; commit(true); }, { noNew: true });
   $("inv-to").addEventListener("change", () => setInvTo($("inv-to").value));
@@ -2510,6 +2631,7 @@ td.num .desl { display: block; font-size: 11px; color: var(--muted); }
     });
     return rows.sort((a, b) => a.name.localeCompare(b.name, "pt"));
   }
+  const clOpen = new Set();
   function renderClients() {
     if ($("clientbox").hidden) return;
     const q = norm($("cl-q").value), box = $("cl-list"); box.textContent = "";
@@ -2519,15 +2641,22 @@ td.num .desl { display: block; font-size: 11px; color: var(--muted); }
       const c = document.createElement("article"); c.className = "cl-card" + (r.saved ? "" : " unsaved");
       const nm = document.createElement("div"); nm.className = "nm";
       const av = document.createElement("span"); av.className = "av"; av.style.background = AV_COLORS[i % AV_COLORS.length]; av.textContent = (r.name.trim()[0] || "?").toUpperCase();
-      const t = document.createElement("span"); t.textContent = r.name; nm.append(av, t); c.appendChild(nm);
-      if (!r.saved) { const tg = document.createElement("span"); tg.className = "cl-tag"; tg.textContent = "Vem dos registos · ainda sem ficha"; c.appendChild(tg); }
+      const t = document.createElement("span"); t.className = "nt"; t.textContent = r.name;
+      const more = document.createElement("div"); more.className = "more"; more.id = "clm-" + i;
+      const key = norm(r.name), open = clOpen.has(key); more.hidden = !open;
+      const vm = document.createElement("button"); vm.type = "button"; vm.className = "vm"; vm.setAttribute("aria-controls", more.id);
+      const setVm = (o) => { vm.textContent = o ? "Ver menos" : "Ver mais"; vm.setAttribute("aria-expanded", String(o)); c.classList.toggle("open", o); };
+      setVm(open);
+      vm.addEventListener("click", () => { const o = more.hidden; more.hidden = !o; if (o) clOpen.add(key); else clOpen.delete(key); setVm(o); });
+      nm.append(av, t, vm); c.appendChild(nm); c.appendChild(more);
+      if (!r.saved) { const tg = document.createElement("span"); tg.className = "cl-tag"; tg.textContent = "Vem dos registos · ainda sem ficha"; more.appendChild(tg); }
       const det = [+r.rate ? "Valor/hora " + money(+r.rate) : "", r.nif ? "NIF " + r.nif : "", r.phone || "", r.email || "", r.addr || ""].filter(Boolean).join("\n");
-      if (det) { const d = document.createElement("div"); d.className = "dt"; d.textContent = det; c.appendChild(d); }
-      if (r.notes) { const d = document.createElement("div"); d.className = "dt"; d.style.fontStyle = "italic"; d.textContent = r.notes; c.appendChild(d); }
+      if (det) { const d = document.createElement("div"); d.className = "dt"; d.textContent = det; more.appendChild(d); }
+      if (r.notes) { const d = document.createElement("div"); d.className = "dt"; d.style.fontStyle = "italic"; d.textContent = r.notes; more.appendChild(d); }
       const st = document.createElement("div"); st.className = "st";
       st.innerHTML = r.days ? r.days + (r.days === 1 ? " dia" : " dias") + " · " + fmtH(r.mins) + " h · <b></b>" : "Sem horas registadas";
       if (r.days) { st.querySelector("b").textContent = money(r.total); if (r.last) st.append(" · último " + dmy(r.last).slice(0, 5)); }
-      c.appendChild(st);
+      more.appendChild(st);
       const acts = document.createElement("div"); acts.className = "acts";
       const cp = btn("Copiar dados", async () => {
         const ok = await copyText(clientText(r));
@@ -2546,7 +2675,7 @@ td.num .desl { display: block; font-size: 11px; color: var(--muted); }
           acts.appendChild(del);
         }
       }
-      c.appendChild(acts); box.appendChild(c);
+      more.appendChild(acts); box.appendChild(c);
     });
   }
   // dados do cliente em texto simples, prontos a colar
@@ -2629,6 +2758,7 @@ td.num .desl { display: block; font-size: 11px; color: var(--muted); }
     $("sheetbox").hidden = false; $("sheetbox").scrollTop = 0; $("sheetcard").scrollTop = 0;
     document.documentElement.classList.add("noscroll"); $("fabsheet").setAttribute("aria-expanded", "true"); syncFab();
     setTimeout(() => $("sheetclose").focus({ preventScroll: true }), 120);
+    requestAnimationFrame(() => { const m = $("months"), sb = m.style.scrollBehavior; m.style.scrollBehavior = "auto"; centerMonth(); m.style.scrollBehavior = sb; });
   }
   function closeSheet() {
     $("sheetbox").hidden = true;
@@ -2873,10 +3003,62 @@ td.num .desl { display: block; font-size: 11px; color: var(--muted); }
 
 
   let downloads = null;
+  // mostra a fatura no topo do ecrã (logo abaixo do cabeçalho fixo, se houver)
+  function invToTop() {
+    const c = $("sheetcard"), inv = $("invoice"); if (!c || inv.hidden) return;
+    const h = c.querySelector(".sheet-head"), sticky = h && getComputedStyle(h).position === "sticky";
+    const ref = sticky ? h.getBoundingClientRect().bottom : c.getBoundingClientRect().top;
+    if (!sticky) { try { inv.scrollIntoView({ block: "start", inline: "nearest" }); } catch (_) { inv.scrollIntoView(true); } }
+    // posição: "Total da fatura" no topo, com a folha e os botões por baixo
+    const tgt = inv.querySelector(".inv-total") || inv;
+    const off = tgt.getBoundingClientRect().top - ref - (sticky ? 10 : 6);
+    if (Math.abs(off) > 2) c.scrollTop += off;
+  }
+  // pré-visualização da fatura: abre em grande, centrada no ecrã
+  let a4vReturn = null;
+  function openA4View() {
+    const pg = $("a4v-page"); pg.textContent = "";
+    const cl = $("a4").cloneNode(true); cl.removeAttribute("id"); cl.removeAttribute("role"); cl.removeAttribute("tabindex"); cl.removeAttribute("title"); cl.removeAttribute("aria-label");
+    pg.appendChild(cl); a4vReturn = document.activeElement;
+    $("a4view").classList.remove("zoom"); $("a4v-zoom").setAttribute("aria-pressed", "false"); $("a4v-zoom").textContent = "Ampliar";
+    $("a4view").hidden = false; $("a4v-scroll").scrollTo(0, 0); $("a4v-close").focus({ preventScroll: true });
+  }
+  function closeA4View() { $("a4view").hidden = true; $("a4v-page").textContent = ""; if (a4vReturn && a4vReturn.focus) a4vReturn.focus({ preventScroll: true }); }
+  $("a4-open").addEventListener("click", openA4View);
+  $("a4").addEventListener("click", openA4View);
+  $("a4").addEventListener("keydown", (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); openA4View(); } });
+  $("a4v-close").addEventListener("click", closeA4View);
+  $("a4v-scroll").addEventListener("click", (ev) => { if (ev.target === ev.currentTarget) closeA4View(); });
+  $("a4v-zoom").addEventListener("click", () => { const z = $("a4view").classList.toggle("zoom"); $("a4v-zoom").setAttribute("aria-pressed", String(z)); $("a4v-zoom").textContent = z ? "Ajustar" : "Ampliar"; });
+  document.addEventListener("keydown", (ev) => { if (ev.key === "Escape" && !$("a4view").hidden) { ev.stopImmediatePropagation(); closeA4View(); } }, true);
+  // depois de escolher o cliente em "Para": fecha o teclado e centra a folha no ecrã
+  function centerA4() { const a = $("a4"); if (!a || $("invoice").hidden) return; a.scrollIntoView({ block: "center", behavior: "auto" }); }
+  // mede a parte visível do ecrã (sem o teclado) para as caixas caberem acima dele
+  (() => { const vv = window.visualViewport; if (!vv) return; const root = document.documentElement;
+    let raf = 0; const upd = () => { raf = 0; root.style.setProperty("--vvh", Math.round(vv.height) + "px"); root.style.setProperty("--vvt", Math.round(vv.offsetTop) + "px"); };
+    const q = () => { if (!raf) raf = requestAnimationFrame(upd); };
+    vv.addEventListener("resize", q); vv.addEventListener("scroll", q); window.addEventListener("orientationchange", q); upd(); })();
+  // bloqueia o zoom (pinça e duplo toque), incluindo no Safari do iPhone, que ignora a meta viewport
+  (() => {
+    const vp = document.querySelector('meta[name="viewport"]');
+    if (vp && !/maximum-scale/.test(vp.content)) vp.content += ",maximum-scale=1,user-scalable=no";
+    const stop = (ev) => ev.preventDefault();
+    ["gesturestart", "gesturechange", "gestureend"].forEach((t) => document.addEventListener(t, stop, { passive: false }));
+    document.addEventListener("touchmove", (ev) => { if (ev.touches && ev.touches.length > 1) ev.preventDefault(); }, { passive: false });
+  })();
+  // efeito de toque nos botões (onda suave a partir do dedo)
+  document.addEventListener("pointerdown", (ev) => {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const el = ev.target.closest(".btn, .fab, .cl-card .vm"); if (!el || el.disabled) return;
+    const r = el.getBoundingClientRect(), d = Math.max(r.width, r.height) * 2.2, sp = document.createElement("span");
+    sp.className = "rip"; sp.style.width = sp.style.height = d + "px";
+    sp.style.left = ev.clientX - r.left - d / 2 + "px"; sp.style.top = ev.clientY - r.top - d / 2 + "px";
+    el.appendChild(sp); setTimeout(() => sp.remove(), 600);
+  }, { passive: true });
   $("export").addEventListener("click", () => {
-    const open = $("invoice").hidden;
-    $("invoice").hidden = !open; $("export").setAttribute("aria-expanded", String(open));
-    if (open) fillInvoice();
+    // abre sempre a fatura (se já estiver aberta, só a mostra); fecha-se no X da própria fatura
+    if ($("invoice").hidden) { $("invoice").hidden = false; $("export").setAttribute("aria-expanded", "true"); fillInvoice(); }
+    invToTop(); requestAnimationFrame(invToTop); setTimeout(invToTop, 120); setTimeout(invToTop, 400);
   });
   $("inv-close").addEventListener("click", () => { $("invoice").hidden = true; $("export").setAttribute("aria-expanded", "false"); });
   $("invoice").addEventListener("input", updateInvoice);
@@ -2904,6 +3086,55 @@ td.num .desl { display: block; font-size: 11px; color: var(--muted); }
     if (!d.count) { $("inv-msg").className = "msg err"; $("inv-msg").textContent = "Não há serviços no período escolhido. Mude o filtro acima."; return false; }
     return true;
   }
+  // enviar por e-mail: no telemóvel abre a partilha com o PDF anexado (escolher o Gmail);
+  // no computador descarrega o PDF e abre o Gmail com o assunto, o texto e o e-mail do cliente
+  // logótipo: repete a animação ao tocar
+  (() => { const n = document.getElementById("brand-name"), b = n && n.closest(".brand"); if (!b) return;
+    b.addEventListener("click", () => { n.classList.remove("play"); void n.offsetWidth; n.classList.add("play"); }); })();
+  $("mail-btn").addEventListener("click", async () => {
+    const d = invData();
+    if (!d.count) { toast("Não há registos nesta folha."); return; }
+    if (!window.jspdf) { toast("O gerador de PDF não carregou. Recarregue a página."); return; }
+    const cname = d.c && d.c.name ? String(d.c.name).trim() : "";
+    const subject = "Horas para conferir", body = (cname ? "Caro, " + cname + "!" : "Caro cliente!") + "\n\nSegue abaixo as horas para serem conferidas, sff!";
+    const name = fileBase(d) + ".pdf", blob = buildPdf(d).output("blob");
+    let file = null; try { file = new File([blob], name, { type: "application/pdf" }); } catch (_) {}
+    if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+      // a partilha do iPhone não passa o assunto ao Gmail: fica copiado para colar
+      try { navigator.clipboard && navigator.clipboard.writeText(subject).then(() => toast("Assunto copiado: cole-o no campo Assunto"), () => {}); } catch (_) {}
+      try { await navigator.share({ files: [file], title: subject, text: body }); return; }
+      catch (err) { if (err && err.name === "AbortError") return; }
+    }
+    const c = d.c && d.c.name ? Object.values(clients).find((x) => norm(x.name) === norm(d.c.name)) : null;
+    const to = c && c.email ? c.email : "";
+    await saveFile(name, blob);
+    window.open("https://mail.google.com/mail/?view=cm&fs=1" + (to ? "&to=" + encodeURIComponent(to) : "") + "&su=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body), "_blank", "noopener");
+    toast("PDF descarregado: anexe-o à mensagem do Gmail");
+  });
+  // enviar por WhatsApp: no telemóvel partilha o PDF (escolher o WhatsApp) com o texto já escrito;
+  // no computador descarrega o PDF e abre o WhatsApp com o texto, para o número do cliente se houver
+  $("wa-btn").addEventListener("click", async () => {
+    const d = invData();
+    if (!d.count) { toast("Não há registos nesta folha."); return; }
+    if (!window.jspdf) { toast("O gerador de PDF não carregou. Recarregue a página."); return; }
+    const cname = d.c && d.c.name ? String(d.c.name).trim() : "";
+    const text = (cname ? "Caro " + cname + "!" : "Caro cliente!") + " Segue abaixo as horas para serem conferidas";
+    const name = fileBase(d) + ".pdf", blob = buildPdf(d).output("blob");
+    let file = null; try { file = new File([blob], name, { type: "application/pdf" }); } catch (_) {}
+    if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+      // o WhatsApp às vezes ignora o texto quando leva um ficheiro: fica copiado para colar
+      try { navigator.clipboard && navigator.clipboard.writeText(text).then(() => toast("Texto copiado: se não aparecer, cole-o no WhatsApp"), () => {}); } catch (_) {}
+      try { await navigator.share({ files: [file], text }); return; }
+      catch (err) { if (err && err.name === "AbortError") return; }
+    }
+    const c = cname ? Object.values(clients).find((x) => norm(x.name) === norm(cname)) : null;
+    let ph = c && c.phone ? String(c.phone).replace(/\D/g, "") : "";
+    if (ph.startsWith("00")) ph = ph.slice(2);
+    if (ph.length === 9) ph = "351" + ph;
+    await saveFile(name, blob);
+    window.open("https://wa.me/" + ph + "?text=" + encodeURIComponent(text), "_blank", "noopener");
+    toast("PDF descarregado: anexe-o à conversa do WhatsApp");
+  });
   $("inv-pdf").addEventListener("click", async () => {
     const d = invData(); if (!checkReady(d)) return;
     if (!window.jspdf) { $("inv-msg").className = "msg err"; $("inv-msg").textContent = "O gerador de PDF não carregou. Verifique a ligação e recarregue a página."; return; }

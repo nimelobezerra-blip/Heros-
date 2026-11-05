@@ -46,7 +46,7 @@ head = """<!doctype html>
 <html lang="pt-PT">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#1d1c1a">
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta name="bezerra-build" content="__BUILD__">
