@@ -14,20 +14,28 @@
   const SCOPES = "https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/calendar.events";
   const FILE_NAME = "heros-dados.json";
   const CACHE_KEY = "bz-cache";
-  const REMEMBER_KEY = "bz-remember", REMEMBER_DAYS = 7;
+  const REMEMBER_KEY = "bz-remember", REMEMBER_DAYS = 180, KEEP_KEY = "bz-keep";
+  // "Manter sessão iniciada" (ecrã de entrada): ligado guarda no aparelho; desligado só até fechar o navegador
+  let keep = true;
+  try { keep = localStorage.getItem(KEEP_KEY) !== "0"; } catch (_) {}
+  const store = () => (keep ? localStorage : sessionStorage);
+  function setKeep(v) {
+    keep = !!v;
+    try { localStorage.setItem(KEEP_KEY, keep ? "1" : "0"); (keep ? sessionStorage : localStorage).removeItem(REMEMBER_KEY); (keep ? sessionStorage : localStorage).removeItem("bz-token"); } catch (_) {}
+  }
 
   // ---------- sessão Google ----------
   let token = null, tokenExp = 0, tokenClient = null, pendingToken = null;
   // lembrar a entrada durante 7 dias (o acesso do Google dura 1 hora e renova-se sem pedir a conta)
   let remember = null;
-  try { const r = JSON.parse(localStorage.getItem(REMEMBER_KEY) || "null"); if (r && r.until > Date.now()) remember = r; else localStorage.removeItem(REMEMBER_KEY); } catch (_) {}
+  try { const r = JSON.parse(store().getItem(REMEMBER_KEY) || "null"); if (r && r.until > Date.now()) remember = r; else store().removeItem(REMEMBER_KEY); } catch (_) {}
   try {
     const t = JSON.parse(localStorage.getItem("bz-token") || sessionStorage.getItem("bz-token") || "null");
     if (remember && t && t.exp > Date.now() + 60000) { token = t.v; tokenExp = t.exp; }
   } catch (_) {}
   function saveRemember(hint) {
-    remember = { until: Date.now() + REMEMBER_DAYS * 864e5, hint: hint || (remember && remember.hint) || "" };
-    try { localStorage.setItem(REMEMBER_KEY, JSON.stringify(remember)); } catch (_) {}
+    remember = { until: Date.now() + (keep ? REMEMBER_DAYS * 864e5 : 12 * 36e5), hint: hint || (remember && remember.hint) || "", keep };
+    try { store().setItem(REMEMBER_KEY, JSON.stringify(remember)); } catch (_) {}
   }
   // authed: há sessão Google · ready: dados do Drive carregados
   let resolveAuthed; const authed = new Promise((r) => { resolveAuthed = r; });
@@ -42,7 +50,7 @@
         const p = pendingToken; pendingToken = null;
         if (resp && resp.access_token) {
           token = resp.access_token; tokenExp = Date.now() + (Number(resp.expires_in) || 3600) * 1000;
-          try { localStorage.setItem("bz-token", JSON.stringify({ v: token, exp: tokenExp })); } catch (_) {}
+          try { store().setItem("bz-token", JSON.stringify({ v: token, exp: tokenExp })); } catch (_) {}
           if (p) p.resolve(token);
         } else if (p) p.reject(new Error((resp && resp.error) || "login"));
       },
@@ -62,7 +70,7 @@
   const hasToken = () => token && tokenExp > Date.now() + 30000;
   function setToken(resp) {
     token = resp.access_token; tokenExp = Date.now() + (Number(resp.expires_in) || 3600) * 1000;
-    try { localStorage.setItem("bz-token", JSON.stringify({ v: token, exp: tokenExp })); } catch (_) {}
+    try { store().setItem("bz-token", JSON.stringify({ v: token, exp: tokenExp })); } catch (_) {}
   }
 
   // ---------- sessão guardada no Cloudflare (worker.js) ----------
@@ -77,13 +85,14 @@
       try { r = await fetch("/auth/token", { method: "POST", credentials: "same-origin" }); }
       catch (_) { return { ok: false, net: true }; }
       if (r.status === 200) {
-        const j = await r.json(); setToken(j); serverAuth = true;
+        const j = await r.json(); if (typeof j.keep === "boolean" && j.keep !== keep) setKeep(j.keep);
+        setToken(j); serverAuth = true;
         keepServerSession(j.until); showMode();
         return { ok: true };
       }
       if (r.status === 401) {
         serverAuth = true; token = null; tokenExp = 0;
-        try { localStorage.removeItem("bz-token"); localStorage.removeItem(REMEMBER_KEY); } catch (_) {}
+        try { [localStorage, sessionStorage].forEach((x) => { x.removeItem("bz-token"); x.removeItem(REMEMBER_KEY); }); } catch (_) {}
         return { ok: false };
       }
       if (r.status === 502) { serverAuth = true; return { ok: false, net: true }; }
@@ -93,8 +102,8 @@
   }
   // lembra no aparelho até quando vale a sessão (para abrir sem rede com os dados guardados)
   function keepServerSession(until) {
-    remember = { until, hint: (remember && remember.hint) || "", server: true };
-    try { localStorage.setItem(REMEMBER_KEY, JSON.stringify(remember)); } catch (_) {}
+    remember = { until, hint: (remember && remember.hint) || "", server: true, keep };
+    try { store().setItem(REMEMBER_KEY, JSON.stringify(remember)); } catch (_) {}
   }
   // entrada com código de autorização: o Worker troca-o pela sessão de 7 dias
   let codeClient = null, pendingCode = null;
@@ -106,7 +115,7 @@
       error_callback: (e) => { const p = pendingCode; pendingCode = null; if (p) p.reject(new Error((e && e.type) || "login")); },
     });
     return new Promise((resolve, reject) => { pendingCode = { resolve, reject }; codeClient.requestCode(); }).then(async (code) => {
-      const r = await fetch("/auth/exchange", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code }) });
+      const r = await fetch("/auth/exchange", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code, keep }) });
       const j = await r.json().catch(() => ({}));
       if (r.ok && j.access_token) { setToken(j); keepServerSession(j.until); showMode(); return token; }
       // o Google já tinha autorizado esta app sem sessão longa: retira essa autorização para o próximo toque pedir a completa
@@ -329,7 +338,8 @@
   function showMode() {
     if (!modeEl || !remember || !remember.until) return;
     const d = new Date(remember.until), dd = String(d.getDate()).padStart(2, "0") + "/" + String(d.getMonth() + 1).padStart(2, "0");
-    modeEl.textContent = serverAuth ? "Sessão lembrada até " + dd : "Lembrada até " + dd + " · sem servidor: pede um toque de hora a hora";
+    modeEl.textContent = !keep ? "Sessão termina ao fechar o navegador" : "Sessão lembrada até " + dd;
+    modeEl.title = !keep || serverAuth ? "" : "Sem servidor: o Google pode pedir um toque de hora a hora";
     modeEl.hidden = false;
   }
   function setSync(t) { if (syncEl) { syncEl.textContent = t; syncEl.hidden = !t; } }
@@ -348,6 +358,7 @@
     return loadingDrive;
   }
   async function enter() {
+    setKeep(gate.querySelector("#bz-keep").checked);
     gateBtn.disabled = true; gateMsg.textContent = "A entrar…";
     try {
       if (serverAuth) await codeLogin();
@@ -380,6 +391,8 @@
       ".bz-go:hover{opacity:.88}.bz-go:active{transform:translateY(1px)}.bz-go:disabled{opacity:.5;cursor:default}" +
       ".bz-go .g{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#fff;flex:none}.bz-go svg{width:17px;height:17px}" +
       ".bz-msg{min-height:1.4em;font-size:13px!important}" +
+      ".bz-keep{display:flex;align-items:center;justify-content:center;gap:9px;font-size:14px;font-weight:600;color:var(--ink,#1d1c1a);cursor:pointer;user-select:none;-webkit-user-select:none;margin-top:-4px}" +
+      ".bz-keep input{width:19px;height:19px;margin:0;accent-color:var(--ink,#1d1c1a);cursor:pointer}" +
       ".bz-sync{position:fixed;left:50%;transform:translateX(-50%);top:calc(10px + env(safe-area-inset-top,0px));z-index:90;background:var(--ink,#1d1c1a);color:var(--paper,#fffdf8);font-size:12.5px;font-weight:700;padding:6px 14px;border-radius:999px}" +
       ".bz-mode{font-size:11.5px;color:var(--muted,#6b675f);align-self:center}.bz-mode[hidden]{display:none}" +
       ".bz-out{font:inherit;font-size:12px;font-weight:700;border:1px solid var(--line,#e3ded3);background:var(--paper,#fffdf8);color:var(--muted,#6b675f);border-radius:999px;padding:5px 12px;cursor:pointer}";
@@ -388,9 +401,11 @@
     gate.innerHTML = '<div class="bz-card" role="dialog" aria-labelledby="bz-t"><div class="bz-brand"><svg class="mark" viewBox="3 0 32 48" aria-hidden="true"><g class="m-b2"><polygon points="22.5,21 28.5,21 28.5,27 22.5,27"/></g><g class="m-b1"><rect x="16.5" y="7" width="6" height="36"/><rect x="28.5" y="7" width="6" height="36"/></g><g class="m-pencil"><rect class="m-body" x="5" y="9" width="10" height="29"/><rect class="m-stripe" x="8.3" y="9" width="3.4" height="29"/><rect class="m-eraser" x="5" y="2" width="10" height="6" rx="2.5"/><rect class="m-ferrule" x="5" y="7.5" width="10" height="2.2"/><polygon class="m-wood" points="5,38 15,38 10,47"/><polygon class="m-lead" points="8.3,44 11.7,44 10,47"/></g></svg><h1 id="bz-t">HEROS<b>.</b></h1></div>' +
       '<p>Entre com a sua conta Google. As horas ficam guardadas numa pasta privada do seu Google Drive e a agenda vem do seu Google Calendar.</p>' +
       '<button type="button" class="bz-go" id="bz-go"><span class="g"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg></span>Entrar com Google</button>' +
+      '<label class="bz-keep"><input type="checkbox" id="bz-keep"><span>Manter sessão iniciada</span></label>' +
       '<p class="bz-msg" id="bz-msg" role="status"></p></div>';
     document.body.appendChild(gate);
     gateMsg = gate.querySelector("#bz-msg"); gateBtn = gate.querySelector("#bz-go");
+    gate.querySelector("#bz-keep").checked = keep;
     gateBtn.addEventListener("click", enter);
     syncEl = document.createElement("div"); syncEl.className = "bz-sync"; syncEl.hidden = true; syncEl.setAttribute("role", "status"); document.body.appendChild(syncEl);
     // botão "Sair" junto ao estado
@@ -401,7 +416,7 @@
         if (dirty) await flush();
         if (serverAuth) { try { await fetch("/auth/logout", { method: "POST", credentials: "same-origin" }); } catch (_) {} }
         try { if (token && gisLoaded()) google.accounts.oauth2.revoke(token, () => {}); } catch (_) {}
-        try { sessionStorage.removeItem("bz-token"); localStorage.removeItem("bz-token"); localStorage.removeItem(REMEMBER_KEY); localStorage.removeItem(CACHE_KEY); } catch (_) {}
+        try { [localStorage, sessionStorage].forEach((x) => { x.removeItem("bz-token"); x.removeItem(REMEMBER_KEY); }); localStorage.removeItem(CACHE_KEY); } catch (_) {}
         location.reload();
       });
       st.insertAdjacentElement("afterend", out);

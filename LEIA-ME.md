@@ -2,7 +2,7 @@
 
 O mesmo site de controlo de horas da app no Claude, mas abre num endereço próprio, sem conta Claude.
 
-- **Entrada:** botão "Entrar com Google". O site lembra a entrada durante 7 dias; depois pede outra vez.
+- **Entrada:** botão "Entrar com Google", com a opção **Manter sessão iniciada**. Ligada, o site lembra a entrada durante 180 dias; desligada, a sessão termina ao fechar o navegador.
 - **Dados:** as horas, os dados da fatura e as etiquetas ficam num ficheiro privado, numa pasta do seu Google Drive que só esta app vê (não aparece na lista normal de ficheiros do Drive).
 - **Agenda:** vem do seu Google Calendar.
 
@@ -48,9 +48,11 @@ Este endereço tem de estar nas **Origens JavaScript autorizadas** do ID de clie
 
 A configuração está em `wrangler.jsonc`; `.assetsignore` impede que `src/`, `build.py` e outros ficheiros do repositório fiquem públicos.
 
-## Entrada lembrada durante 7 dias (Cloudflare)
+## Manter sessão iniciada (Cloudflare)
 
-`worker.js` guarda a sessão Google num cookie cifrado (HttpOnly) e renova o acesso sozinho, sem janelas nem toques, durante 7 dias. Para funcionar, o Worker precisa do **Client secret** do Google como segredo:
+`worker.js` guarda a sessão Google num cookie cifrado (HttpOnly) e renova o acesso sozinho, sem janelas nem toques: 180 dias com «Manter sessão iniciada», ou até fechar o navegador sem essa opção.
+
+**Atenção:** enquanto a app estiver em modo de teste no Google Cloud, o Google corta a sessão ao fim de 7 dias. Para durar mais, em **Ecrã de consentimento OAuth** carregue em **Publicar app** (fica em produção; o aviso «app não verificada» continua a aparecer ao entrar, basta escolher Continuar). Para funcionar, o Worker precisa do **Client secret** do Google como segredo:
 
 1. Google Cloud Console → **APIs e serviços → Credenciais** → o seu ID de cliente OAuth → copie o **Segredo do cliente** (Client secret).
 2. Cloudflare → **Workers e Pages** → **heros** → **Definições** → **Variáveis e segredos** → **Adicionar** → tipo **Segredo**, nome `GOOGLE_CLIENT_SECRET`, valor: o segredo copiado → **Implementar**.
